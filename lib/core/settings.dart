@@ -1,24 +1,34 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'i18n.dart';
 
-/// Адрес сервера по умолчанию: для эмулятора Android `10.0.2.2` — это localhost компьютера.
-/// Для боевой версии замените на https://ваш-домен (или поменяйте в «Настройках» приложения).
-final String defaultBaseUrl = kIsWeb ? 'http://localhost:3000' : 'http://10.0.2.2:3000';
+/// Боевой сервер. Адрес можно сменить в «Настройках» приложения (для тестов — адрес компьютера).
+const defaultBaseUrl = 'https://tjsafo.site';
+
+/// Старые тестовые адреса (эмулятор/localhost) больше не используем.
+String _initialBase(SharedPreferences p) {
+  final v = p.getString('baseUrl');
+  if (v == null || v.contains('10.0.2.2') || v.contains('localhost'))
+    return defaultBaseUrl;
+  return v;
+}
 
 class AppSettings extends ChangeNotifier {
   AppSettings._(this._prefs)
-      : lang = _prefs.getString('lang') ?? 'tg',
-        themeMode = ThemeMode.values.byName(_prefs.getString('theme') ?? 'dark'),
-        baseUrl = _prefs.getString('baseUrl') ?? defaultBaseUrl;
+    : lang = _prefs.getString('lang') ?? 'tg',
+      themeMode = ThemeMode.values.byName(_prefs.getString('theme') ?? 'dark'),
+      baseUrl = _initialBase(_prefs);
 
   final SharedPreferences _prefs;
   String lang;
   ThemeMode themeMode;
   String baseUrl;
 
-  static Future<AppSettings> load() async => AppSettings._(await SharedPreferences.getInstance());
+  /// Токен входа (только в памяти; постоянно хранится в AuthStore).
+  String? token;
+
+  static Future<AppSettings> load() async =>
+      AppSettings._(await SharedPreferences.getInstance());
 
   String t(String key, [Map<String, Object>? params]) => tr(lang, key, params);
 
@@ -46,14 +56,20 @@ class AppSettings extends ChangeNotifier {
 
   /// Для кэша списка мест
   String? get cachedPlaces => _prefs.getString('places_cache');
-  Future<void> cachePlaces(String json) => _prefs.setString('places_cache', json);
+  Future<void> cachePlaces(String json) =>
+      _prefs.setString('places_cache', json);
 }
 
 /// Доступ к настройкам из любого места дерева виджетов.
 class AppScope extends InheritedNotifier<AppSettings> {
-  const AppScope({super.key, required AppSettings settings, required super.child}) : super(notifier: settings);
+  const AppScope({
+    super.key,
+    required AppSettings settings,
+    required super.child,
+  }) : super(notifier: settings);
 
-  static AppSettings of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<AppScope>()!.notifier!;
+  static AppSettings of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<AppScope>()!.notifier!;
 }
 
 extension AppX on BuildContext {

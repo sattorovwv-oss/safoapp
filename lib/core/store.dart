@@ -34,7 +34,8 @@ class PlacesStore extends ChangeNotifier {
 
   /// Лучшие по рейтингу, затем по числу отзывов.
   List<Place> get top {
-    final l = [...places]..sort((a, b) {
+    final l = [...places]
+      ..sort((a, b) {
         final c = b.ratingAvg.compareTo(a.ratingAvg);
         return c != 0 ? c : b.ratingCount.compareTo(a.ratingCount);
       });
@@ -43,9 +44,14 @@ class PlacesStore extends ChangeNotifier {
 }
 
 class StoreScope extends InheritedNotifier<PlacesStore> {
-  const StoreScope({super.key, required PlacesStore store, required super.child}) : super(notifier: store);
+  const StoreScope({
+    super.key,
+    required PlacesStore store,
+    required super.child,
+  }) : super(notifier: store);
 
-  static PlacesStore of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<StoreScope>()!.notifier!;
+  static PlacesStore of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<StoreScope>()!.notifier!;
 }
 
 extension StoreX on BuildContext {

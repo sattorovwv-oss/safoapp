@@ -17,7 +17,16 @@ class SafoColors extends ThemeExtension<SafoColors> {
     required this.danger,
   });
 
-  final Color bg, surface, surface2, text, muted, primary, onPrimary, accent, border, danger;
+  final Color bg,
+      surface,
+      surface2,
+      text,
+      muted,
+      primary,
+      onPrimary,
+      accent,
+      border,
+      danger;
 
   static const dark = SafoColors(
     bg: Color(0xFF0B130E),
@@ -46,10 +55,10 @@ class SafoColors extends ThemeExtension<SafoColors> {
   );
 
   LinearGradient get brand => LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [primary, Color.lerp(primary, const Color(0xFF059669), .6)!],
-      );
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [primary, Color.lerp(primary, const Color(0xFF059669), .6)!],
+  );
 
   @override
   SafoColors copyWith() => this;
@@ -81,40 +90,85 @@ extension SafoThemeX on BuildContext {
 ThemeData buildTheme(Brightness b) {
   final c = b == Brightness.dark ? SafoColors.dark : SafoColors.light;
   final base = ThemeData(brightness: b, useMaterial3: true);
-  final text = base.textTheme.apply(bodyColor: c.text, displayColor: c.text).copyWith(
-        displaySmall: TextStyle(fontSize: 34, height: 1.1, fontWeight: FontWeight.w800, letterSpacing: -1, color: c.text),
-        headlineMedium: TextStyle(fontSize: 26, height: 1.15, fontWeight: FontWeight.w800, letterSpacing: -.6, color: c.text),
-        titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, letterSpacing: -.3, color: c.text),
-        titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: c.text),
+  final text = base.textTheme
+      .apply(bodyColor: c.text, displayColor: c.text)
+      .copyWith(
+        displaySmall: TextStyle(
+          fontSize: 34,
+          height: 1.1,
+          fontWeight: FontWeight.w800,
+          letterSpacing: -1,
+          color: c.text,
+        ),
+        headlineMedium: TextStyle(
+          fontSize: 26,
+          height: 1.15,
+          fontWeight: FontWeight.w800,
+          letterSpacing: -.6,
+          color: c.text,
+        ),
+        titleLarge: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -.3,
+          color: c.text,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+          color: c.text,
+        ),
         bodyLarge: TextStyle(fontSize: 16, height: 1.55, color: c.text),
         bodyMedium: TextStyle(fontSize: 14, height: 1.5, color: c.text),
-        labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, letterSpacing: .1, color: c.text),
+        labelLarge: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+          letterSpacing: .1,
+          color: c.text,
+        ),
       );
   return base.copyWith(
     scaffoldBackgroundColor: c.bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: c.primary, brightness: b).copyWith(
-      primary: c.primary,
-      onPrimary: c.onPrimary,
-      surface: c.surface,
-      onSurface: c.text,
-      error: c.danger,
-    ),
+    colorScheme: ColorScheme.fromSeed(seedColor: c.primary, brightness: b)
+        .copyWith(
+          primary: c.primary,
+          onPrimary: c.onPrimary,
+          surface: c.surface,
+          onSurface: c.text,
+          error: c.danger,
+        ),
     textTheme: text,
     extensions: [c],
     splashFactory: InkSparkle.splashFactory,
-    appBarTheme: AppBarTheme(backgroundColor: Colors.transparent, elevation: 0, scrolledUnderElevation: 0, foregroundColor: c.text),
-    pageTransitionsTheme: const PageTransitionsTheme(builders: {
-      TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
-      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-    }),
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      foregroundColor: c.text,
+    ),
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      },
+    ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: c.surface,
       contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       hintStyle: TextStyle(color: c.muted),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: c.border)),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: c.border)),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: c.primary, width: 1.6)),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide: BorderSide(color: c.border),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide: BorderSide(color: c.border),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide: BorderSide(color: c.primary, width: 1.6),
+      ),
     ),
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,

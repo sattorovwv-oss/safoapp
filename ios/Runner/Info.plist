@@ -66,5 +66,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Safo uses your location to mark where litter is.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Safo needs the camera to take photos of litter and cleaned places.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Safo needs access to your photos to attach them to a report.</string>
 </dict>
 </plist>
