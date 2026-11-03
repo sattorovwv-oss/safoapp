@@ -43,12 +43,10 @@ class _MapScreenState extends State<MapScreen> {
           ),
           children: [
             TileLayer(
-              urlTemplate: dark
-                  ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-                  : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              subdomains: const ['a', 'b', 'c', 'd'],
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'tj.safo.safo',
-              retinaMode: RetinaMode.isHighDensity(context),
+              // Тёмная тема: те же плитки OSM с инверсией цвета (CARTO требует ключ)
+              tileBuilder: dark ? darkModeTileBuilder : null,
             ),
             MarkerLayer(
               markers: [
