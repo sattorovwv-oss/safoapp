@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../core/api.dart';
 import '../core/auth.dart';
+import '../core/offline_queue.dart';
 import '../core/models.dart';
 import '../core/settings.dart';
 import '../core/theme.dart';
@@ -29,6 +30,7 @@ class _CleanerTaskScreenState extends State<CleanerTaskScreen> {
   bool _busy = false;
   bool _uploading = false;
   bool _done = false;
+  bool _offlineSaved = false;
 
   CleanerReport get r => widget.report;
 
@@ -102,7 +104,10 @@ class _CleanerTaskScreenState extends State<CleanerTaskScreen> {
     if (!mounted) return;
     setState(() => _uploading = true);
     final auth = context.auth;
+    final queue = context.queue;
     try {
+      // Нет интернета — сохраняем фото на телефоне, отправим автоматически позже
+      if (!await auth.api.reachable()) throw ApiException('network');
       await auth.api.complete(r.id, shots, note: _note.text);
       if (!mounted) return;
       setState(() {
@@ -112,8 +117,20 @@ class _CleanerTaskScreenState extends State<CleanerTaskScreen> {
       });
       await Future<void>.delayed(const Duration(milliseconds: 2300));
       if (mounted) Navigator.of(context).pop();
-    } catch (e) {
+    } on ApiException catch (e) {
       if (!mounted) return;
+      if (e.code == 'network') {
+        await queue.enqueue(r.id, shots, _note.text);
+        if (!mounted) return;
+        setState(() {
+          _uploading = false;
+          _done = true;
+          _offlineSaved = true;
+        });
+        await Future<void>.delayed(const Duration(milliseconds: 2600));
+        if (mounted) Navigator.of(context).pop();
+        return;
+      }
       setState(() => _uploading = false);
       _toast(_err(e));
     }
@@ -367,7 +384,7 @@ class _CleanerTaskScreenState extends State<CleanerTaskScreen> {
             ],
           ),
           if (_uploading) const _Overlay(),
-          if (_done) const _Success(),
+          if (_done) _Success(offline: _offlineSaved),
         ],
       ),
     );
@@ -471,7 +488,8 @@ class _Overlay extends StatelessWidget {
 
 /// Анимация успеха: зелёный круг с галочкой «выпрыгивает».
 class _Success extends StatelessWidget {
-  const _Success();
+  const _Success({this.offline = false});
+  final bool offline;
 
   @override
   Widget build(BuildContext context) {
@@ -511,7 +529,7 @@ class _Success extends StatelessWidget {
                   ),
                   const SizedBox(height: 28),
                   Text(
-                    context.t('done_title'),
+                    context.t(offline ? 'offline_saved_title' : 'done_title'),
                     textAlign: TextAlign.center,
                     style: context.tt.headlineMedium,
                   ),
@@ -519,7 +537,7 @@ class _Success extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Text(
-                      context.t('done_text'),
+                      context.t(offline ? 'offline_saved_text' : 'done_text'),
                       textAlign: TextAlign.center,
                       style: TextStyle(color: c.muted, height: 1.4),
                     ),

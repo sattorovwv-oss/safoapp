@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../core/api.dart';
 import '../core/auth.dart';
 import 'login_screen.dart';
@@ -371,6 +372,24 @@ class _AccountCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
+          if (auth.isCommittee) ...[
+            SizedBox(
+              width: double.infinity,
+
+              child: PrimaryButton(
+                label: context.t('open_panel'),
+
+                icon: Icons.dashboard_rounded,
+
+                onTap: () => launchUrl(
+                  Uri.parse('${context.app.baseUrl}/committee'),
+                  mode: LaunchMode.externalApplication,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+          ],
           SizedBox(
             width: double.infinity,
             child: u == null

@@ -16,6 +16,7 @@ class AuthStore extends ChangeNotifier {
   bool restoring = true;
 
   bool get isCleaner => user?.role == 'CLEANER';
+  bool get isCommittee => user?.role == 'COMMITTEE' || user?.role == 'ADMIN';
   bool get isResident => user?.role == 'RESIDENT';
   bool get isChairman => user?.role == 'CHAIRMAN';
   bool get isTourist => user?.role == 'TOURIST';

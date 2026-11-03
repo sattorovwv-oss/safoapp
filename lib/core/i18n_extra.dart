@@ -91,6 +91,16 @@ const Map<String, Map<String, String>> extraStrings = {
     'chat_chairman': 'Раис',
     'login_needed_title': 'Вуруд лозим аст',
     'login_needed_text': 'Ин қисм барои сокинон ва раисон аст.',
+    'offline_saved_title': 'Дар телефон сабт шуд',
+    'offline_saved_text':
+        'Интернет нест. Акс худкор мефиристад, вақте ки интернет пайдо шавад.',
+    'offline_cached':
+        'Интернет нест: рӯйхати охирини захирашуда нишон дода мешавад.',
+    'pending_uploads': '{n} вазифа интизори интернет аст',
+    'pending_hint':
+        'Барнома онҳоро худкор мефиристад. Дар ҳамин вақт барнома кушода бошад.',
+    'send_now': 'Ҳозир',
+    'open_panel': 'Кушодани панели кумита (сайт)',
     'status_CANCELLED': 'Бекор шуд',
   },
   'ru': {
@@ -181,6 +191,14 @@ const Map<String, Map<String, String>> extraStrings = {
     'chat_chairman': 'Председатель',
     'login_needed_title': 'Нужен вход',
     'login_needed_text': 'Этот раздел для жителей и председателей.',
+    'offline_saved_title': 'Сохранено на телефоне',
+    'offline_saved_text':
+        'Интернета нет. Фото отправится само, как только появится связь.',
+    'offline_cached': 'Нет интернета: показан последний сохранённый список.',
+    'pending_uploads': 'Ждут интернета: {n}',
+    'pending_hint': 'Приложение отправит их само, пока оно открыто.',
+    'send_now': 'Сейчас',
+    'open_panel': 'Открыть панель комитета (сайт)',
     'status_CANCELLED': 'Отменён',
   },
   'en': {
@@ -273,6 +291,14 @@ const Map<String, Map<String, String>> extraStrings = {
     'chat_chairman': 'Chairman',
     'login_needed_title': 'Sign-in required',
     'login_needed_text': 'This section is for residents and chairmen.',
+    'offline_saved_title': 'Saved on your phone',
+    'offline_saved_text':
+        'No internet. The photos will be sent automatically once you are back online.',
+    'offline_cached': 'No internet: showing the last saved list.',
+    'pending_uploads': 'Waiting for internet: {n}',
+    'pending_hint': 'The app sends them by itself while it is open.',
+    'send_now': 'Send now',
+    'open_panel': 'Open committee panel (web)',
     'status_CANCELLED': 'Cancelled',
   },
 };

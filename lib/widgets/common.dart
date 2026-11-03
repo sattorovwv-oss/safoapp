@@ -182,13 +182,20 @@ class PlaceImage extends StatelessWidget {
     // Нет реального фото: цветной фон и значок категории
     final fallback = Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: tone),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: tone,
+        ),
       ),
       child: Center(
         child: Container(
           width: 72,
           height: 72,
-          decoration: BoxDecoration(color: Colors.white.withValues(alpha: .16), borderRadius: BorderRadius.circular(22)),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: .16),
+            borderRadius: BorderRadius.circular(22),
+          ),
           child: Icon(catIcon(category), size: 38, color: Colors.white),
         ),
       ),

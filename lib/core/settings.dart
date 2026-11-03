@@ -58,6 +58,11 @@ class AppSettings extends ChangeNotifier {
   String? get cachedPlaces => _prefs.getString('places_cache');
   Future<void> cachePlaces(String json) =>
       _prefs.setString('places_cache', json);
+
+  /// Для кэша заданий тозакунанда (чтобы видеть их без интернета)
+  String? get cachedCleaner => _prefs.getString('cleaner_cache');
+  Future<void> cacheCleaner(String json) =>
+      _prefs.setString('cleaner_cache', json);
 }
 
 /// Доступ к настройкам из любого места дерева виджетов.

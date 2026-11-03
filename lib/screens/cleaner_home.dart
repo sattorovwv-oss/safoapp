@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/api.dart';
 import '../core/auth.dart';
 import '../core/models.dart';
+import '../core/offline_queue.dart';
 import '../core/settings.dart';
 import '../core/theme.dart';
 import '../widgets/common.dart';
@@ -91,6 +92,33 @@ class _CleanerHomeScreenState extends State<CleanerHomeScreen> {
             ),
           ),
           const SizedBox(height: 18),
+          _QueueBanner(),
+          if (d != null && d.fromCache)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: c.accent.withValues(alpha: .14),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.cloud_off_rounded, color: c.accent, size: 20),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        context.t('offline_cached'),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           if (_loading && d == null) ...const [
             Shimmer(height: 120),
             SizedBox(height: 14),
@@ -434,6 +462,68 @@ class _StatusBadge extends StatelessWidget {
           color: color,
           fontWeight: FontWeight.w900,
           fontSize: 11.5,
+        ),
+      ),
+    );
+  }
+}
+
+/// Сколько фото ждут интернета, с кнопкой «Отправить сейчас».
+class _QueueBanner extends StatelessWidget {
+  const _QueueBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    final q = context.queue;
+    if (q.pending == 0) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: c.accent.withValues(alpha: .14),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: c.accent.withValues(alpha: .6)),
+        ),
+        child: Row(
+          children: [
+            q.busy
+                ? SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      color: c.accent,
+                    ),
+                  )
+                : Icon(Icons.cloud_upload_rounded, color: c.accent, size: 28),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.t('pending_uploads', {'n': q.pending}),
+                    style: const TextStyle(fontWeight: FontWeight.w900),
+                  ),
+                  Text(
+                    context.t('pending_hint'),
+                    style: TextStyle(
+                      color: c.muted,
+                      fontSize: 12.5,
+                      height: 1.3,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            FilledButton(
+              onPressed: q.busy ? null : q.process,
+              child: Text(context.t('send_now')),
+            ),
+          ],
         ),
       ),
     );

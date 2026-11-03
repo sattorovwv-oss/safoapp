@@ -197,6 +197,7 @@ class CleanerData {
   });
   final int today, total;
   final List<CleanerReport> open, mine, done;
+  bool fromCache = false;
 
   factory CleanerData.fromJson(Map<String, dynamic> j) {
     List<CleanerReport> l(dynamic v) => [

@@ -156,12 +156,40 @@ class Api {
 
   // ---------------- Тозакунанда ----------------
 
-  Future<CleanerData> cleanerReports() => _guard(() async {
-    final r = await http
-        .get(_u('/api/mobile/cleaner/reports'), headers: authHeaders)
-        .timeout(const Duration(seconds: 20));
-    return CleanerData.fromJson(await _json(r));
-  });
+  Future<CleanerData> cleanerReports() async {
+    try {
+      final r = await http
+          .get(_u('/api/mobile/cleaner/reports'), headers: authHeaders)
+          .timeout(const Duration(seconds: 20));
+      final raw = utf8.decode(r.bodyBytes);
+      final data = CleanerData.fromJson(await _json(r));
+      await settings.cacheCleaner(raw);
+      return data;
+    } catch (e) {
+      // Нет интернета: показываем последние сохранённые задания
+      final cached = settings.cachedCleaner;
+      if (cached != null &&
+          (e is! ApiException || e.code == 'network' || e.status == null)) {
+        return CleanerData.fromJson(
+          (jsonDecode(cached) as Map).cast<String, dynamic>(),
+        )..fromCache = true;
+      }
+      if (e is ApiException) rethrow;
+      throw ApiException('network');
+    }
+  }
+
+  /// Быстрая проверка связи (4 секунды) — чтобы не ждать долго, если интернета нет.
+  Future<bool> reachable() async {
+    try {
+      final r = await http
+          .get(_u('/api/mobile/places'))
+          .timeout(const Duration(seconds: 4));
+      return r.statusCode < 500;
+    } catch (_) {
+      return false;
+    }
+  }
 
   Future<void> claim(String id) => _guard(() async {
     await _json(

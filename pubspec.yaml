@@ -20,6 +20,7 @@ dependencies:
   image_picker: ^1.1.2
   flutter_secure_storage: ^9.2.2
   geolocator: ^13.0.2
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:
@@ -40,3 +41,9 @@ flutter:
   assets:
     - assets/hero.jpg
     - assets/icon.png
+
+# path_provider_android >= 2.3 тянет jni (нативная сборка через CMake) — на Windows падает.
+# Версия 2.2.x без нативной части работает так же.
+dependency_overrides:
+  path_provider_android: '>=2.2.5 <2.3.0'
+  shared_preferences_android: '>=2.3.4 <2.5.0'
