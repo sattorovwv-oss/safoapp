@@ -23,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _error;
   List<MahallaItem> _mahallas = [];
   String? _mahallaId;
+  bool _google = false; // нажали «Войти через Google» и ждём возврата из браузера
 
   @override
   void dispose() {
@@ -76,6 +77,21 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final c = context.c;
+    final auth = context.auth;
+    if (_google && auth.user != null) {
+      _google = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) Navigator.of(context).pop(true);
+      });
+    }
+    final gErr = _google && !auth.googleWaiting ? auth.googleError : null;
+    final shownError =
+        _error ??
+        (gErr == null
+            ? null
+            : (context.t('err_$gErr') == 'err_$gErr'
+                  ? context.t('err_failed')
+                  : context.t('err_$gErr')));
     return Scaffold(
       body: Stack(
         children: [
@@ -137,6 +153,51 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 18),
                 FadeSlideIn(
                   index: 2,
+                  child: _GoogleButton(
+                    label: auth.googleWaiting && _google
+                        ? context.t('google_waiting')
+                        : context.t('google_sign_in'),
+                    onTap: auth.googleWaiting && _google
+                        ? null
+                        : () {
+                            setState(() {
+                              _google = true;
+                              _error = null;
+                            });
+                            auth.startGoogle();
+                          },
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    context.t('google_hint'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: c.muted, fontSize: 12.5),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(child: Divider(color: c.border)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        context.t('or_word').toUpperCase(),
+                        style: TextStyle(
+                          color: c.muted,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.6,
+                        ),
+                      ),
+                    ),
+                    Expanded(child: Divider(color: c.border)),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                FadeSlideIn(
+                  index: 3,
                   child: _Switch(
                     resident: _resident,
                     left: context.t('login_staff'),
@@ -241,7 +302,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 AnimatedSize(
                   duration: const Duration(milliseconds: 280),
                   curve: Curves.easeOutCubic,
-                  child: _error == null
+                  child: shownError == null
                       ? const SizedBox(width: double.infinity)
                       : Container(
                           margin: const EdgeInsets.only(top: 16),
@@ -262,7 +323,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
-                                  _error!,
+                                  shownError,
                                   style: TextStyle(
                                     color: c.danger,
                                     fontWeight: FontWeight.w700,
@@ -361,6 +422,77 @@ class _Switch extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+/// Белая кнопка Google с цветной «G» (без картинок: буква с градиентом в цветах Google).
+class _GoogleButton extends StatelessWidget {
+  const _GoogleButton({required this.label, required this.onTap});
+  final String label;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Container(
+          height: 54,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: c.border),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ShaderMask(
+                shaderCallback: (r) => const SweepGradient(
+                  colors: [
+                    Color(0xFF4285F4),
+                    Color(0xFF34A853),
+                    Color(0xFFFBBC05),
+                    Color(0xFFEA4335),
+                    Color(0xFF4285F4),
+                  ],
+                ).createShader(r),
+                child: const Text(
+                  'G',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Flexible(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Color(0xFF1F1F1F),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+              if (onTap == null) ...[
+                const SizedBox(width: 10),
+                const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }

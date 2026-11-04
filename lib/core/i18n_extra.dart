@@ -53,6 +53,17 @@ const Map<String, Map<String, String>> extraStrings = {
     'report_done_title': 'Ташаккур!',
     'report_done_text':
         'Хабар ба тозакунандагон фиристода шуд. Сурат махфӣ аст.',
+    'google_sign_in': 'Ворид бо Google',
+    'google_hint': 'Барои сайёҳон: бе парол, бо як пахш.',
+    'or_word': 'ё',
+    'google_waiting': 'Вурудро дар браузер анҷом диҳед…',
+    'err_staff_email':
+        'Ин почта ба корманд тааллуқ дорад — бо логин ва парол ворид шавед.',
+    'err_cancelled': 'Вуруд бекор шуд.',
+    'err_expired': 'Вақти вуруд гузашт. Аз нав кӯшиш кунед.',
+    'err_failed': 'Вуруд бо Google нашуд. Дубора кӯшиш кунед.',
+    'err_disabled': 'Ин ҳисоб баста шудааст.',
+    'err_off': 'Вуруд бо Google ҳоло фаъол нест.',
     'report_login_needed': 'Барои фиристодани хабар ворид шавед',
     'report_guest_note':
         'Метавонед бе вуруд фиристед. Барои дидани ҳолати гузориш ворид шавед.',
@@ -157,6 +168,17 @@ const Map<String, Map<String, String>> extraStrings = {
     'report_done_title': 'Спасибо!',
     'report_done_text':
         'Сообщение отправлено уборщикам. Фото остаётся приватным.',
+    'google_sign_in': 'Войти через Google',
+    'google_hint': 'Для путешественников: без пароля, в одно нажатие.',
+    'or_word': 'или',
+    'google_waiting': 'Завершите вход в браузере…',
+    'err_staff_email':
+        'Эта почта принадлежит сотруднику — войдите по логину и паролю.',
+    'err_cancelled': 'Вход отменён.',
+    'err_expired': 'Время входа истекло. Попробуйте снова.',
+    'err_failed': 'Не удалось войти через Google. Попробуйте ещё раз.',
+    'err_disabled': 'Этот аккаунт отключён.',
+    'err_off': 'Вход через Google сейчас недоступен.',
     'report_login_needed': 'Войдите, чтобы отправить сообщение',
     'report_guest_note':
         'Можно отправить без входа. Чтобы следить за статусом, войдите.',
@@ -260,6 +282,17 @@ const Map<String, Map<String, String>> extraStrings = {
     'report_done_title': 'Thank you!',
     'report_done_text':
         'Your report was sent to the cleaners. The photo stays private.',
+    'google_sign_in': 'Continue with Google',
+    'google_hint': 'For travellers: no password, one tap.',
+    'or_word': 'or',
+    'google_waiting': 'Finish signing in in the browser…',
+    'err_staff_email':
+        'This email belongs to a staff account — sign in with your login and password.',
+    'err_cancelled': 'Sign-in was cancelled.',
+    'err_expired': 'The sign-in took too long. Try again.',
+    'err_failed': "Couldn't sign in with Google. Try again.",
+    'err_disabled': 'This account is disabled.',
+    'err_off': "Google sign-in isn't available right now.",
     'report_login_needed': 'Sign in to send a report',
     'report_guest_note':
         'You can send this without signing in. Sign in to follow its status.',

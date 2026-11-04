@@ -139,6 +139,27 @@ class Api {
     );
   });
 
+  /// Вход через Google: меняем одноразовый код из ссылки safo://auth на токен.
+  Future<LoginResult> loginGoogle(String code, String verifier) =>
+      _guard(() async {
+        final r = await http
+            .post(
+              _u('/api/mobile/auth/google'),
+              headers: {'content-type': 'application/json'},
+              body: jsonEncode({'code': code, 'verifier': verifier}),
+            )
+            .timeout(const Duration(seconds: 20));
+        final j = await _json(r);
+        return LoginResult(
+          j['token'] as String,
+          AuthUser.fromJson((j['user'] as Map).cast<String, dynamic>()),
+        );
+      });
+
+  /// Адрес начала входа через Google (открывается во внешнем браузере).
+  Uri googleStart(String challenge) =>
+      _u('/api/auth/google/start?app=1&cc=$challenge');
+
   Future<AuthUser> me() => _guard(() async {
     final r = await http
         .get(_u('/api/mobile/me'), headers: authHeaders)
