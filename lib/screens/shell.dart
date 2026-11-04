@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../core/auth.dart';
 import '../core/settings.dart';
 import '../core/theme.dart';
+import '../core/updater.dart';
 import 'chat_screen.dart';
 import 'cleaner_home.dart';
 import 'report_screen.dart';
@@ -27,6 +28,15 @@ class _ShellState extends State<Shell> {
   _Tab _cur = _Tab.home;
   final _visited = <_Tab>{_Tab.home};
   final _request = ValueNotifier<String?>(null);
+
+  @override
+  void initState() {
+    super.initState();
+    // Проверяем обновление после первого кадра, чтобы не тормозить запуск
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) Updater.check(context);
+    });
+  }
 
   void _go(_Tab t) {
     if (t == _cur) return;

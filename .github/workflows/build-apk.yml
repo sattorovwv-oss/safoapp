@@ -1,10 +1,16 @@
 name: Build APK
 
 # Запуск: GitHub -> вкладка Actions -> "Build APK" -> Run workflow (или автоматически при каждом push в main)
+# Подпись: секреты репозитория ANDROID_KEYSTORE_BASE64 и ANDROID_KEYSTORE_PASSWORD (Settings -> Secrets -> Actions).
+# С подписью сборка публикуется как Release: всегда последняя версия по ссылке
+#   https://github.com/<repo>/releases/latest/download/safo.apk  (+ version.json для проверки обновлений в приложении)
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   apk:
@@ -24,13 +30,44 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Signing key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ]; then
+            echo "::warning::Нет секретов подписи — APK будет подписан временным debug-ключом и не попадёт в Release"
+            exit 0
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > android/app/safo-release.jks
+          printf 'storeFile=safo-release.jks\nstorePassword=%s\nkeyAlias=safo\nkeyPassword=%s\n' "$KEYSTORE_PASSWORD" "$KEYSTORE_PASSWORD" > android/key.properties
+          echo "SIGNED=1" >> "$GITHUB_ENV"
+
       - run: flutter pub get
-      - run: flutter build apk --release
+      - run: flutter build apk --release --build-number=${{ github.run_number }} --build-name=1.0.${{ github.run_number }}
         env:
           GRADLE_OPTS: -Dorg.gradle.daemon=false
+
+      - name: Prepare files
+        run: |
+          cp build/app/outputs/flutter-apk/app-release.apk safo.apk
+          printf '{"build": %s, "name": "1.0.%s", "url": "https://github.com/%s/releases/latest/download/safo.apk"}\n' \
+            "${{ github.run_number }}" "${{ github.run_number }}" "${{ github.repository }}" > version.json
+          cat version.json
 
       - uses: actions/upload-artifact@v4
         with:
           name: safo-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: safo.apk
           retention-days: 30
+
+      - name: Release
+        if: env.SIGNED == '1'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: Сафо 1.0.${{ github.run_number }}
+          make_latest: true
+          files: |
+            safo.apk
+            version.json

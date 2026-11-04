@@ -53,6 +53,11 @@ const Map<String, Map<String, String>> extraStrings = {
     'report_done_title': 'Ташаккур!',
     'report_done_text':
         'Хабар ба тозакунандагон фиристода шуд. Сурат махфӣ аст.',
+    'update_title': 'Навсозии нав',
+    'update_text':
+        'Версияи нави Сафо ({v}) омода аст — бо ислоҳҳо ва имкониятҳои нав. Барномаро навсозӣ кунед.',
+    'update_now': 'Навсозӣ',
+    'update_later': 'Баъдтар',
     'google_sign_in': 'Ворид бо Google',
     'google_hint': 'Барои сайёҳон: бе парол, бо як пахш.',
     'or_word': 'ё',
@@ -168,6 +173,11 @@ const Map<String, Map<String, String>> extraStrings = {
     'report_done_title': 'Спасибо!',
     'report_done_text':
         'Сообщение отправлено уборщикам. Фото остаётся приватным.',
+    'update_title': 'Доступно обновление',
+    'update_text':
+        'Вышла новая версия Сафо ({v}) — с исправлениями и новыми возможностями. Обновите приложение.',
+    'update_now': 'Обновить',
+    'update_later': 'Позже',
     'google_sign_in': 'Войти через Google',
     'google_hint': 'Для путешественников: без пароля, в одно нажатие.',
     'or_word': 'или',
@@ -282,6 +292,11 @@ const Map<String, Map<String, String>> extraStrings = {
     'report_done_title': 'Thank you!',
     'report_done_text':
         'Your report was sent to the cleaners. The photo stays private.',
+    'update_title': 'Update available',
+    'update_text':
+        'A new version of Safo ({v}) is out, with fixes and new features. Please update the app.',
+    'update_now': 'Update',
+    'update_later': 'Later',
     'google_sign_in': 'Continue with Google',
     'google_hint': 'For travellers: no password, one tap.',
     'or_word': 'or',
