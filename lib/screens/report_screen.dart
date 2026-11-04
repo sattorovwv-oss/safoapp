@@ -114,19 +114,8 @@ class _ReportScreenState extends State<ReportScreen> {
     final auth = context.auth;
     final top = MediaQuery.of(context).padding.top;
 
-    if (auth.user == null) {
-      return EmptyState(
-        icon: Icons.lock_outline_rounded,
-        title: context.t('report_login_needed'),
-        action: PrimaryButton(
-          label: context.t('sign_in'),
-          icon: Icons.login_rounded,
-          onTap: () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (_) => const LoginScreen())),
-        ),
-      );
-    }
+    // Без входа тоже можно: жалоба уйдёт от имени «Гостя» (сервер сам это решает)
+    final guest = auth.user == null;
     if (_done) {
       return Center(
         child: Padding(
@@ -168,7 +157,7 @@ class _ReportScreenState extends State<ReportScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                context.t('report_done_text'),
+                context.t(guest ? 'report_done_guest' : 'report_done_text'),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: c.muted, height: 1.4),
               ),
@@ -199,6 +188,37 @@ class _ReportScreenState extends State<ReportScreen> {
             style: context.tt.displaySmall,
           ),
         ),
+        if (guest) ...[
+          const SizedBox(height: 14),
+          FadeSlideIn(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
+              decoration: BoxDecoration(
+                color: c.surface,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: c.border.withValues(alpha: .7)),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.person_outline_rounded, color: c.accent),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      context.t('report_guest_note'),
+                      style: TextStyle(color: c.muted, height: 1.35),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    ),
+                    child: Text(context.t('sign_in')),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
         const SizedBox(height: 20),
         FadeSlideIn(
           index: 1,

@@ -54,6 +54,10 @@ const Map<String, Map<String, String>> extraStrings = {
     'report_done_text':
         'Хабар ба тозакунандагон фиристода шуд. Сурат махфӣ аст.',
     'report_login_needed': 'Барои фиристодани хабар ворид шавед',
+    'report_guest_note':
+        'Метавонед бе вуруд фиристед. Барои дидани ҳолати гузориш ворид шавед.',
+    'report_done_guest':
+        'Гузориш ба тозакунандагон расид — ҷой ҳарчи зудтар тоза мешавад.',
     'write_review': 'Шарҳ навиштан',
     'your_rating': 'Баҳои шумо',
     'review_hint': 'Таассуроти худро нависед…',
@@ -154,6 +158,10 @@ const Map<String, Map<String, String>> extraStrings = {
     'report_done_text':
         'Сообщение отправлено уборщикам. Фото остаётся приватным.',
     'report_login_needed': 'Войдите, чтобы отправить сообщение',
+    'report_guest_note':
+        'Можно отправить без входа. Чтобы следить за статусом, войдите.',
+    'report_done_guest':
+        'Сообщение получили уборщики — место уберут как можно скорее.',
     'write_review': 'Написать отзыв',
     'your_rating': 'Ваша оценка',
     'review_hint': 'Поделитесь впечатлением…',
@@ -253,6 +261,10 @@ const Map<String, Map<String, String>> extraStrings = {
     'report_done_text':
         'Your report was sent to the cleaners. The photo stays private.',
     'report_login_needed': 'Sign in to send a report',
+    'report_guest_note':
+        'You can send this without signing in. Sign in to follow its status.',
+    'report_done_guest':
+        'The cleaners have your report — the spot will be cleared soon.',
     'write_review': 'Write a review',
     'your_rating': 'Your rating',
     'review_hint': 'Share your impressions…',
