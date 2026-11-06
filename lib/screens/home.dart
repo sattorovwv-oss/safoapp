@@ -6,6 +6,7 @@ import '../core/store.dart';
 import '../core/theme.dart';
 import '../widgets/common.dart';
 import '../widgets/place_cards.dart';
+import 'hotels_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
@@ -110,6 +111,7 @@ class HomeScreen extends StatelessWidget {
               ),
             )
           else ...[
+            const SliverToBoxAdapter(child: HotelsHomeSection()),
             if (capital.isNotEmpty) ...[
               SliverToBoxAdapter(
                 child: SectionTitle(
