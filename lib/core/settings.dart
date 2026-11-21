@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'i18n.dart';
 
@@ -17,12 +19,19 @@ class AppSettings extends ChangeNotifier {
   AppSettings._(this._prefs)
     : lang = _prefs.getString('lang') ?? 'tg',
       themeMode = ThemeMode.values.byName(_prefs.getString('theme') ?? 'dark'),
-      baseUrl = _initialBase(_prefs);
+      baseUrl = _initialBase(_prefs),
+      winter = _prefs.getBool('winter') ?? false;
 
   final SharedPreferences _prefs;
   String lang;
   ThemeMode themeMode;
   String baseUrl;
+
+  /// Зимний режим (снег, ледяные цвета) — включается на сервере в админке; последнее значение запоминается.
+  bool winter;
+
+  /// Разделы, закрытые на обновление (hotels, cars …).
+  Set<String> closedSections = const {};
 
   /// Токен входа (только в памяти; постоянно хранится в AuthStore).
   String? token;
@@ -53,6 +62,28 @@ class AppSettings extends ChangeNotifier {
     await _prefs.setString('baseUrl', baseUrl);
     notifyListeners();
   }
+
+  /// Настройки с сервера: зимний режим и закрытые разделы. Без интернета остаются прежние.
+  Future<void> refreshConfig() async {
+    try {
+      final r = await http
+          .get(Uri.parse('$baseUrl/api/mobile/config'))
+          .timeout(const Duration(seconds: 10));
+      if (r.statusCode != 200) return;
+      final j = jsonDecode(utf8.decode(r.bodyBytes)) as Map;
+      final w = j['winter'] == true;
+      final closed = {for (final s in (j['closed'] as List? ?? [])) '$s'};
+      if (w != winter || closed.length != closedSections.length || !closed.containsAll(closedSections)) {
+        winter = w;
+        closedSections = closed;
+        await _prefs.setBool('winter', w);
+        notifyListeners();
+      }
+    } catch (_) {}
+  }
+
+  /// Иконка «Сафо» для экранов приложения (зимой — зимняя).
+  String get iconAsset => winter ? 'assets/icon_winter.png' : 'assets/icon.png';
 
   /// Для кэша списка мест
   String? get cachedPlaces => _prefs.getString('places_cache');

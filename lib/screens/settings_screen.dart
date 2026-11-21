@@ -151,7 +151,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(22),
-                child: Image.asset('assets/icon.png', width: 64, height: 64),
+                child: Image.asset(context.app.iconAsset, width: 64, height: 64),
               ),
               const SizedBox(height: 12),
               Text(context.t('app'), style: context.tt.titleLarge),

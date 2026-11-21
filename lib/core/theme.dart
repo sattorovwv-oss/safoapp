@@ -54,10 +54,42 @@ class SafoColors extends ThemeExtension<SafoColors> {
     danger: Color(0xFFB91C1C),
   );
 
+  /// Зима: ночной синий и ледяной голубой вместо зелёного (как на сайте).
+  static const winterDark = SafoColors(
+    bg: Color(0xFF0A1833),
+    surface: Color(0xFF10223F),
+    surface2: Color(0xFF172D52),
+    text: Color(0xFFEAF2FF),
+    muted: Color(0xFFA6B9D6),
+    primary: Color(0xFF7FD6FB),
+    onPrimary: Color(0xFF05263B),
+    accent: Color(0xFFFBBF24),
+    border: Color(0xFF25416C),
+    danger: Color(0xFFF87171),
+  );
+
+  static const winterLight = SafoColors(
+    bg: Color(0xFFEEF6FC),
+    surface: Color(0xFFFFFFFF),
+    surface2: Color(0xFFE3F0FA),
+    text: Color(0xFF0F2238),
+    muted: Color(0xFF55687F),
+    primary: Color(0xFF0B78B5),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFFB45309),
+    border: Color(0xFFCBE0F1),
+    danger: Color(0xFFB91C1C),
+  );
+
+  /// Зимой (голубой primary) — ледяной градиент, иначе изумрудный.
+  bool get isWinter => primary.b > primary.g;
+
   LinearGradient get brand => LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [primary, Color.lerp(primary, const Color(0xFF059669), .6)!],
+    colors: isWinter
+        ? [Color.lerp(primary, Colors.white, .32)!, primary]
+        : [primary, Color.lerp(primary, const Color(0xFF059669), .6)!],
   );
 
   @override
@@ -87,8 +119,10 @@ extension SafoThemeX on BuildContext {
   TextTheme get tt => Theme.of(this).textTheme;
 }
 
-ThemeData buildTheme(Brightness b) {
-  final c = b == Brightness.dark ? SafoColors.dark : SafoColors.light;
+ThemeData buildTheme(Brightness b, {bool winter = false}) {
+  final c = winter
+      ? (b == Brightness.dark ? SafoColors.winterDark : SafoColors.winterLight)
+      : (b == Brightness.dark ? SafoColors.dark : SafoColors.light);
   final base = ThemeData(brightness: b, useMaterial3: true);
   final text = base.textTheme
       .apply(bodyColor: c.text, displayColor: c.text)

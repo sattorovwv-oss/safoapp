@@ -6,6 +6,7 @@ import '../core/store.dart';
 import '../core/theme.dart';
 import '../widgets/common.dart';
 import '../widgets/place_cards.dart';
+import 'cars_screen.dart';
 import 'hotels_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -112,6 +113,7 @@ class HomeScreen extends StatelessWidget {
             )
           else ...[
             const SliverToBoxAdapter(child: HotelsHomeSection()),
+            const SliverToBoxAdapter(child: CarsHomeSection()),
             if (capital.isNotEmpty) ...[
               SliverToBoxAdapter(
                 child: SectionTitle(
@@ -192,7 +194,7 @@ class _Hero extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        Image.asset('assets/hero.jpg', fit: BoxFit.cover),
+        Image.asset(context.app.winter ? 'assets/hero_winter.jpg' : 'assets/hero.jpg', fit: BoxFit.cover),
         DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -218,7 +220,7 @@ class _Hero extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(13),
-                  child: Image.asset('assets/icon.png', width: 40, height: 40),
+                  child: Image.asset(context.app.iconAsset, width: 40, height: 40),
                 ),
                 const SizedBox(width: 12),
                 Text(
